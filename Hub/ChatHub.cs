@@ -47,7 +47,7 @@ public class ChatHub : Hub
         }
     }
 
-    public override async Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
         foreach (var room in RoomUsers.Keys)
         {
