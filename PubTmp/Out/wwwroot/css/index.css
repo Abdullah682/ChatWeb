@@ -1,0 +1,91 @@
+﻿/* Login Page Styling */
+.login-container {
+    background: linear-gradient(135deg, #4e87d6, #3dd9fb);
+    padding: 55px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 650px;
+    margin-left:270px;
+    margin-top:100px;
+    animation: fadeIn 0.8s ease-in-out;
+}
+body {
+    background: linear-gradient(135deg, #cef6fb, #ffffff);
+}
+
+    /* Heading */
+    .login-container h2 {
+        margin-bottom: 15px;
+        color: #ffffff;
+        font-size: 22px;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    /* Input Fields */
+    .login-container input {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        outline: none;
+        transition: 0.3s;
+    }
+
+        .login-container input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .login-container input:focus {
+            background: rgba(255, 255, 255, 0.4);
+            color: #000;
+        }
+
+    /* Join Button */
+    .login-container button {
+        background: #0052d4;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top:10px;
+        text-transform: uppercase;
+        width: 100%;
+        transition: 0.3s;
+    }
+
+        .login-container button:hover {
+            background: #003c8f;
+            transform: scale(1.05);
+        }
+
+/* Smooth Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .login-container {
+        width: 90%;
+        margin-left:25px;
+    }
+}
