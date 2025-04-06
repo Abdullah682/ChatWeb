@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="~/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <span id="roomName"></span>
+            <span class="logout" onclick="logout()">🚪 Exit</span>
+        </div>
+
+        <div class="users-list" id="usersList"> <strong>Active Users:</strong> </div>
+
+        <div class="chat-messages" id="messagesList"></div>
+
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Type a message..." />
+            <button onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <script>
+        // Get User Name & Room Name from URL
+        const params = new URLSearchParams(window.location.search);
+        const userName = params.get("name");
+        const roomName = params.get("room");
+
+        // Show Room Name
+        document.getElementById("roomName").textContent = `Room: ${roomName}`;
+
+        // Connect to SignalR
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+
+        connection.start().then(() => {
+            connection.invoke("JoinRoom", userName, roomName);
+        }).catch(console.error);
+
+        function scrollToBottom() {
+            var messagesList = document.getElementById("messagesList");
+            messagesList.scrollTop = messagesList.scrollHeight;
+        }
+
+        connection.on("ReceiveMessage", (user, message) => {
+            const msgDiv = document.createElement("div");
+            msgDiv.className = user === userName ? "user-message" : "other-message";
+
+            // ✅ Create Bold Username
+            const userSpan = document.createElement("span");
+            userSpan.className = "user-name";
+            userSpan.textContent = `${user}: `;
+
+            // ✅ Create Message Text
+            const messageText = document.createElement("span");
+            messageText.textContent = message;
+
+            // ✅ Append Both to Message Div
+            msgDiv.appendChild(userSpan);
+            msgDiv.appendChild(messageText);
+
+            document.getElementById("messagesList").appendChild(msgDiv);
+            scrollToBottom();
+        });
+
+        // Show "User Joined" Message
+        connection.on("UserJoined", (user) => {
+            const userMsg = document.createElement("div");
+            userMsg.className = "user-joined";
+            userMsg.textContent = `${user} joined the chat`;
+            document.getElementById("messagesList").appendChild(userMsg);
+        });
+
+        // Send Message
+        function sendMessage() {
+            const messageInput = document.getElementById("messageInput");
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            connection.invoke("SendMessage", userName, roomName, message).catch(console.error);
+            messageInput.value = "";
+        }
+        // ✅ Show "User Left" Message
+        connection.on("UserLeft", (user) => {
+            const userMsg = document.createElement("div");
+            userMsg.className = "user-left";
+            userMsg.textContent = `${user} left the chat`;
+            document.getElementById("messagesList").appendChild(userMsg);
+        });
+        connection.on("UpdateActiveUsers", (users) => {
+            const usersListDiv = document.getElementById("usersList");
+            usersListDiv.innerHTML = "<strong>Active Users:</strong> <br/>";
+
+            users.forEach(user => {
+                const userItem = document.createElement("div");
+                userItem.className = "active-user";
+                userItem.textContent = `🟢 ${user}`;
+                usersListDiv.appendChild(userItem);
+            });
+        });
+
+
+        function logout() {
+            connection.invoke("LeaveRoom", userName, roomName).then(() => {
+                sessionStorage.clear();  // ✅ Clear Session Storage
+                localStorage.clear();    // ✅ Clear Local Storage
+                fetch("/Chat/Logout")    // ✅ Server-side session clear
+                    .then(() => {
+                        window.location.href = "/Home/Index"; // ✅ Redirect to login
+                    });
+            }).catch(console.error);
+        }
+      
+
+    </script>
+
+</body>
+</html>

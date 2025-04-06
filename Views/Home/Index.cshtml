@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chat App Login</title>
+    <link rel="stylesheet" href="~/css/index.css">
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Join Chat Room</h2>
+        <input type="text" id="userName" placeholder="Enter your name" required />
+        <input type="text" id="roomCode" placeholder="Enter room code ( DOTNET )" required />
+        <button onclick="joinChat()">Join</button>
+    </div>
+
+    <script>
+        function joinChat() {
+            let name = document.getElementById("userName").value.trim();
+            let room = document.getElementById("roomCode").value.trim().toUpperCase();
+
+            if (name === "" || room === "") {
+                alert("Please enter both name and room code!");
+                return;
+            }
+
+            if (room !== "DOTNET") {
+                alert("Invalid room code!");
+                return;
+            }
+
+            // Redirect to ChatController -> Index Action
+            window.location.href = `/Chat?name=${encodeURIComponent(name)}&room=${encodeURIComponent(room)}`;
+        }
+
+    </script>
+
+</body>
+</html>
