@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
 <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 <GenerateRazorHostingAssemblyInfo>false</GenerateRazorHostingAssemblyInfo>
+<GenerateRazorAssemblyInfo>false</GenerateRazorAssemblyInfo>
 
   </PropertyGroup>
 
